@@ -32,7 +32,7 @@ add_executable(recorded src/recorded_data.cpp
                 src/math/linalg.cpp src/math/grid.cpp
                 ${HEADERS})
 
-add_executable(line_GUI src/viewing/line_crossing.cpp 
+add_executable(line_GUI src/debugging/line_crossing.cpp 
                 src/math/linalg.cpp src/math/grid.cpp
                 ${HEADERS})
 
