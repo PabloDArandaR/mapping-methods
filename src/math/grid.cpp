@@ -45,7 +45,6 @@ std::list<Cell> grid::crossing_line_cells(Point starting_point, Point ending_poi
             current_pivot_iteration = starting_cell.x;
         }
     }
-    //int current_pivot_iteration = evaluate_rows ? starting_cell.y : starting_cell.x - direction_x;
 
     // Cell limit is the limit value that we need to check when evaluating the cells (it represents the limit value in
     // which the iteration is going to run through the minimum checks direction)
