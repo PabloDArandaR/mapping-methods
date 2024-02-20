@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
-#include "argparse/argparse.hpp"
 #include <GLFW/glfw3.h>
+#include "argparse/argparse.hpp"
+#include "spdlog/spdlog.h"
 #include "types.hpp"
 #include "math/grid.hpp"
 #include "tools/glfw.hpp"
@@ -23,8 +24,10 @@ void colorCells(std::list<Cell> cells, int rows, int cols, int width, int height
 
 int main(int argc, char** argv)
 {
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::info("Test evaluation");
+    
     auto args = argparse::parse<lineArgs>(argc, argv);
-
     GLFWwindow* window;
     int width {1000}, height{1000};
 
@@ -75,7 +78,7 @@ int main(int argc, char** argv)
         colorCells(cell_list, 10, 10, width, height);
         if (setup_cells){
             for (Cell cell: cell_list){
-                std::cout << "Cell found is: " << cell.x << ", " << cell.y << std::endl;
+                spdlog::debug("Cell found is: {}, {}", cell.x, cell.y);
             }
             setup_cells = false;
         }

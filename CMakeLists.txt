@@ -5,11 +5,11 @@ add_subdirectory(/home/pablo/Software/glfw /home/pablo/Software/glfw/src)
 
 include_directories(include)
 
-find_package(OpenGL REQUIRED)
 find_package(Eigen3)
-
-find_package(glfw3 3.3 REQUIRED)
+find_package(spdlog REQUIRED)
 find_package(argparse REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(glfw3 3.3 REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIRS})
 
@@ -45,7 +45,6 @@ set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "/home/pablo/Software/glfw")
 target_link_libraries(debug_case1 Eigen3::Eigen)
 target_link_libraries(debug_case2 Eigen3::Eigen)
 target_link_libraries(recorded Eigen3::Eigen)
-target_link_libraries(line_GUI glfw OpenGL::GL)
-target_link_libraries(line_GUI argparse::argparse)
+target_link_libraries(line_GUI glfw OpenGL::GL argparse::argparse spdlog::spdlog)
 
 message("${CMAKE_MODULE_PATH}")
