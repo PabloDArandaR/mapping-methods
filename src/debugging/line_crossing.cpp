@@ -1,9 +1,16 @@
 #include "types.hpp"
 #include "math/grid.hpp"
-#include <stdio.h>
-#include <iostream>
 
+#include <iostream>
+#include <vector>
+
+#include "argparse/argparse.hpp"
 #include <GLFW/glfw3.h>
+
+struct lineArgs : public argparse::Args
+{
+    std::vector<float> &config = kwarg("c,config", "Info about the points and grid to plot. Format is: start.x start.y end.x end.y rows cols");
+};
 
 void drawRectangle(float x, float y, float width, float height, float red, float green, float blue){
     glColor3f(red, green, blue);
@@ -73,8 +80,10 @@ void colorCells(std::list<Cell> cells, int rows, int cols, int width, int height
     }
 }
 
-int main(void)
+int main(int argc, char** argv)
 {
+    auto args = argparse::parse<lineArgs>(argc, argv);
+
     GLFWwindow* window;
     int width {1000}, height{1000};
 
@@ -96,10 +105,10 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    int cols {10}, rows {10};
+    Point starting_point(args.config[0], args.config[1]), end_point(args.config[2], args.config[3]);
+    int rows{(int)args.config[4]}, cols{(int)args.config[5]};
     
     bool setup_cells {true};
-    
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -121,14 +130,12 @@ int main(void)
         float horizontalSize {float(width)/cols}, verticalSize {float(height)/rows};
 
         // Find occupied cells
-        Point starting_point(5.2, 5.3), end_point(2.5f, 2.1f);
         std::list<Cell> cell_list = grid::crossing_line_cells(starting_point, end_point);
         colorCells(cell_list, 10, 10, width, height);
         if (setup_cells){
             for (Cell cell: cell_list){
                 std::cout << "Cell found is: " << cell.x << ", " << cell.y << std::endl;
             }
-
             setup_cells = false;
         }
 

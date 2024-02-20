@@ -9,6 +9,7 @@ find_package(OpenGL REQUIRED)
 find_package(Eigen3)
 
 find_package(glfw3 3.3 REQUIRED)
+find_package(argparse REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIRS})
 
@@ -42,5 +43,6 @@ target_link_libraries(debug_case1 Eigen3::Eigen)
 target_link_libraries(debug_case2 Eigen3::Eigen)
 target_link_libraries(recorded Eigen3::Eigen)
 target_link_libraries(line_GUI glfw OpenGL::GL)
+target_link_libraries(line_GUI argparse::argparse)
 
 message("${CMAKE_MODULE_PATH}")
