@@ -15,7 +15,9 @@ include_directories(${OPENGL_INCLUDE_DIRS})
 
 set(HEADERS include/mapping/mapping.hpp include/mapping/no_noise.hpp include/mapping/occupancy_grid.hpp include/mapping/scanner_metadata.hpp
             include/math/grid.hpp include/math/linalg.hpp
-            include/types.hpp)
+            include/types.hpp
+            include/tools/glfw.hpp
+            )
 
 add_executable(debug_case1 src/example1.cpp
                 src/mapping/no_noise.cpp src/mapping/occupancy_grid.cpp src/mapping/scanner_metadata.cpp src/mapping/mapping.cpp
@@ -35,6 +37,7 @@ add_executable(recorded src/recorded_data.cpp
 
 add_executable(line_GUI src/debugging/line_crossing.cpp 
                 src/math/linalg.cpp src/math/grid.cpp
+                src/tools/glfw.cpp
                 ${HEADERS})
 
 set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "/home/pablo/Software/glfw")
