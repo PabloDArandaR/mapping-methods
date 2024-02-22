@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "tools/glfw.hpp"
+#include "graphics/glfw.hpp"
 #include <GLFW/glfw3.h>
 
 #define _USE_MATH_DEFINES

@@ -1,4 +1,4 @@
-#include "mapping/occupancy_grid.hpp"
+#include "ds/occupancy_grid.hpp"
 #include "types.hpp"
 
 #include <fstream>

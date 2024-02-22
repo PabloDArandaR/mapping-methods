@@ -7,7 +7,7 @@
 #include "mapping/mapping.hpp"
 #include "mapping/no_noise.hpp"
 
-#include "mapping/occupancy_grid.hpp"
+#include "ds/occupancy_grid.hpp"
 
 int main() {
     noNoiseMethod mapping_method;

@@ -1,4 +1,4 @@
-#include "mapping/scanner_metadata.hpp"
+#include "abstract/scanner_metadata.hpp"
 
 scanerMetadata::scanerMetadata(){};
 

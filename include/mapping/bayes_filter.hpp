@@ -1,4 +1,4 @@
-#include "mapping.hpp"
+#include "mapping/mapping.hpp"
 
 class bayesFilterMethod : mappingOccupancyGrid {
   public:

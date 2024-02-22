@@ -1,13 +1,13 @@
-#include "mapping/occupancy_grid.hpp"
+#include "ds/occupancy_grid.hpp"
 #include "types.hpp"
 
 #ifndef MAPPING_GUARD
 #define MAPPING_GUARD
 
-class mappingOccupancyGrid {
+class mapping {
 
   public:
-    mappingOccupancyGrid();
+    mapping();
 
     virtual void update([[maybe_unused]] Eigen::Vector3d relative_position,
                         [[maybe_unused]] Eigen::Vector4d relative_rotation,

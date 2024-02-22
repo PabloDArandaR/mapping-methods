@@ -4,8 +4,8 @@
 #include <iostream>
 
 #include "mapping/no_noise.hpp"
-#include "mapping/occupancy_grid.hpp"
-#include "mapping/scanner_metadata.hpp"
+#include "ds/occupancy_grid.hpp"
+#include "abstract/scanner_metadata.hpp"
 #include "math/grid.hpp"
 #include "math/linalg.hpp"
 #include "types.hpp"

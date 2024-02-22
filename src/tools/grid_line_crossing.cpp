@@ -5,12 +5,12 @@
 #include "spdlog/spdlog.h"
 #include "types.hpp"
 #include "math/grid.hpp"
-#include "tools/glfw.hpp"
+#include "graphics/glfw.hpp"
 
 
 struct lineArgs : public argparse::Args
 {
-    std::vector<float> &config = kwarg("c,config", "Info about the points and grid to plot. Format is: start.x start.y end.x end.y rows cols");
+    std::optional<std::vector<float>> &config = kwarg("c,config", "Info about the points and grid to plot. Format is: start.x start.y end.x end.y rows cols").multi_argument();
 };
 
 void colorCells(std::list<Cell> cells, int rows, int cols, int width, int height){
@@ -22,12 +22,8 @@ void colorCells(std::list<Cell> cells, int rows, int cols, int width, int height
     }
 }
 
-int main(int argc, char** argv)
-{
-    spdlog::set_level(spdlog::level::debug);
-    spdlog::info("Test evaluation");
-    
-    auto args = argparse::parse<lineArgs>(argc, argv);
+int cli_points_execution(std::vector<float> config){
+
     GLFWwindow* window;
     int width {1000}, height{1000};
 
@@ -49,8 +45,8 @@ int main(int argc, char** argv)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    Point starting_point(args.config[0], args.config[1]), end_point(args.config[2], args.config[3]);
-    int rows{(int)args.config[4]}, cols{(int)args.config[5]};
+    Point starting_point(config[0], config[1]), end_point(config[2], config[3]);
+    int rows{(int)config[4]}, cols{(int)config[5]};
     
     bool setup_cells {true};
     /* Loop until the user closes the window */
@@ -66,7 +62,7 @@ int main(int argc, char** argv)
         // Set the coordinate system
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0.0, width, height, 0.0, -1.0, 1.0);
+        glOrtho(0.0, width, 0.0, height, -1.0, 1.0);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
@@ -75,21 +71,22 @@ int main(int argc, char** argv)
 
         // Find occupied cells
         std::list<Cell> cell_list = grid::crossing_line_cells(starting_point, end_point);
-        colorCells(cell_list, 10, 10, width, height);
+        colorCells(cell_list, rows, cols, width, height);
+
+        // Draw the grid
+        drawGrid(rows, cols, width, height); // Draw a 10x10 grid with cell size of 50 pixels
+
+        // Draw starting and ending point
+        drawPoint(starting_point.x*horizontalSize, starting_point.y*verticalSize, 3, 10, 0.0, 1.0, 0.0);
+        drawPoint(end_point.x*horizontalSize, end_point.y*verticalSize, 3, 10, 0.0, 1.0, 0.0);
+        drawLine(starting_point.x*horizontalSize, starting_point.y*verticalSize, end_point.x*horizontalSize, end_point.y*verticalSize, 0, 0, 1);
+
         if (setup_cells){
             for (Cell cell: cell_list){
                 spdlog::debug("Cell found is: {}, {}", cell.x, cell.y);
             }
             setup_cells = false;
         }
-
-        // Draw the grid
-        drawGrid(rows, cols, width, height); // Draw a 10x10 grid with cell size of 50 pixels
-
-        // Draw starting and ending point
-        drawPoint(starting_point.x*horizontalSize, starting_point.y*verticalSize, 10, 10, 0.0, 1.0, 0.0);
-        drawPoint(end_point.x*horizontalSize, end_point.y*verticalSize, 10, 10, 0.0, 1.0, 0.0);
-        drawLine(starting_point.x*horizontalSize, starting_point.y*verticalSize, end_point.x*horizontalSize, end_point.y*verticalSize, 0, 0, 1);
 
         // Swap front and back buffers
         glfwSwapBuffers(window);
@@ -99,5 +96,22 @@ int main(int argc, char** argv)
     }
 
     glfwTerminate();
+
+    return 0;
+}
+
+int main(int argc, char** argv)
+{
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::info("Test evaluation");
+    
+    auto args = argparse::parse<lineArgs>(argc, argv);
+
+    if (args.config.value().size() == 6){
+        return cli_points_execution(args.config.value());
+    }
+    else {
+        spdlog::warn("No valid CLI selection");
+    };
     return 0;
 }

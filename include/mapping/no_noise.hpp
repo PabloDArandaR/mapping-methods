@@ -3,9 +3,9 @@
 #include <list>
 
 #include "mapping/mapping.hpp"
-#include "mapping/scanner_metadata.hpp"
+#include "abstract/scanner_metadata.hpp"
 
-class noNoiseMethod : public mappingOccupancyGrid {
+class noNoiseMethod : public mapping {
   public:
     noNoiseMethod();
     noNoiseMethod(occupancyGrid* map);
