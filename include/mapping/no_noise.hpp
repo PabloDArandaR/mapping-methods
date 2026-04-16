@@ -1,23 +1,24 @@
+#pragma once
+
 #include <eigen3/Eigen/Dense>
-#include <vector>
+#include <eigen3/Eigen/Geometry>
 #include <list>
+#include <vector>
 
 #include "mapping/mapping.hpp"
-#include "abstract/scanner_metadata.hpp"
+#include "sensor/lidar_measurement.hpp"
+
+namespace mm {
 
 class noNoiseMethod : public mapping {
   public:
     noNoiseMethod();
     noNoiseMethod(occupancyGrid* map);
 
-    void update(Eigen::Vector3d relative_position, Eigen::Vector4d relative_rotation,
-                std::vector<float> laser_measurements);
+    /// Expects measurement to be a LidarMeasurement.
+    void update(const Eigen::Isometry3d& pose, const sensor::Measurement& measurement) override;
 
-    void set_scaner_metadata(scanerMetadata metadata);
-
-    void fill_cells(std::list<Cell>& cell_list, float range_val);
-
-  private:
-    float angle_increment;
-    scanerMetadata metadata;
+    void fill_cells(std::list<Cell>& cell_list, double range_max, double range_val);
 };
+
+} // namespace mm

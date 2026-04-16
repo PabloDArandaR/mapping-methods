@@ -1,28 +1,29 @@
-#include "toolset/parser/parser.hpp"
+#ifndef INCLUDE_TOOLSET_PARSER_FREIBURG_HPP
+#define INCLUDE_TOOLSET_PARSER_FREIBURG_HPP
+
 #include "spdlog/spdlog.h"
+#include "toolset/parser/parser.hpp"
+#include <string>
+#include <unordered_map>
+#include <vector>
 
-struct param{
-    std::string name, value;
-    float logger_timestamp;
-    std::string ipc_hostname;
+namespace mm {
+namespace toolset {
+
+class FreiburgParser : Parser {
+  public:
+    FreiburgParser(){};
+    std::vector<signal_data*>& getSignalData(std::string signal_name);
+    std::unordered_map<std::string, std::vector<signal_data*>>& getData();
+    void parseFile(std::string datafile) override;
+    void _parseLine(std::string line);
+
+  private:
+    std::unordered_map<std::string, std::vector<signal_data*>> data;
+    std::unordered_map<std::string, std::vector<param*>> parameters;
 };
 
-struct message{
-    float ipc_timestamp, logger_timestamp;
-    std::string ipc_hostname;
-};
+} // namespace toolset
+} // namespace mm
 
-struct ODOM: message{
-    float x,y,theta,tv,rv,accel;
-};
-
-struct LASER: message{
-    int num_readings;
-    float x, y, theta,odom_x, odom_y, odom_theta;
-};
-
-class FreiburgParser: Parser{
-    public:
-        FreiburgParser(){};
-        void parseFile(std::string datafile) override;
-};
+#endif

@@ -1,24 +1,27 @@
-#include "ds/occupancy_grid.hpp"
-#include "types.hpp"
+#pragma once
 
-#ifndef MAPPING_GUARD
-#define MAPPING_GUARD
+#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Geometry>
+
+#include "ds/occupancy_grid.hpp"
+#include "sensor/measurement.hpp"
+
+namespace mm {
 
 class mapping {
-
   public:
     mapping();
 
-    virtual void update([[maybe_unused]] Eigen::Vector3d relative_position,
-                        [[maybe_unused]] Eigen::Vector4d relative_rotation,
-                        [[maybe_unused]] std::vector<float> laser_measurements);
+    /// Update the map given the robot's current pose in the world frame and a sensor measurement.
+    /// @param pose   Robot pose as a rigid transform (rotation + translation).
+    /// @param measurement  Sensor measurement; concrete algorithms cast to their expected subtype.
+    virtual void update(const Eigen::Isometry3d& pose, const sensor::Measurement& measurement);
 
     occupancyGrid* get_map();
-
     void set_map(occupancyGrid* new_map);
 
   protected:
     occupancyGrid* map;
 };
 
-#endif
+} // namespace mm

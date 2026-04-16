@@ -1,64 +1,60 @@
-cmake_minimum_required(VERSION 3.5)
-project(mapping_methods)
+cmake_minimum_required(VERSION 3.14)
+project(mapping_methods VERSION 0.1.0 LANGUAGES CXX)
 
-add_subdirectory(/home/pablo/Software/glfw /home/pablo/Software/glfw/src)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include_directories(include)
+include(FetchContent)
 
-find_package(Eigen3)
+# --- argparse (header-only, used by visualisation example only) ---
+FetchContent_Declare(
+    argparse
+    GIT_REPOSITORY https://github.com/morrisfranken/argparse.git
+    GIT_TAG        master
+)
+FetchContent_MakeAvailable(argparse)
+
+# --- System packages ---
+find_package(Eigen3 REQUIRED)
 find_package(spdlog REQUIRED)
-find_package(argparse REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(glfw3 3.3 REQUIRED)
+find_package(OpenGL)
+find_package(glfw3 3.3)
 
-include_directories(${OPENGL_INCLUDE_DIRS})
+set(OpenGL_GL_PREFERENCE GLVND)
 
-set(HEADERS include/abstract/scanner_metadata.hpp
-    include/ds/occupancy_grid.hpp
-    include/graphics/glfw.hpp
-    include/mapping/mapping.hpp include/mapping/no_noise.hpp include/mapping/bayes_filter.hpp
-    include/math/grid.hpp include/math/linalg.hpp
-    include/types.hpp
-    include/toolset/parser/parser.hpp include/toolset/parser/freiburg.hpp
-    )
-
-add_executable(debug_case1 src/tools/example1.cpp
+# --- Library sources ---
+set(LIB_SOURCES
     src/ds/occupancy_grid.cpp
-    src/mapping/mapping.cpp src/mapping/no_noise.cpp
-    src/abstract/scanner_metadata.cpp
-    src/math/grid.cpp src/math/linalg.cpp
-    )
+    src/mapping/mapping.cpp
+    src/mapping/no_noise.cpp
+    src/math/grid.cpp
+    src/math/linalg.cpp
+    src/toolset/parser/freiburg.cpp
+)
 
+if(glfw3_FOUND AND OpenGL_FOUND)
+    list(APPEND LIB_SOURCES src/graphics/glfw.cpp)
+endif()
 
-add_executable(debug_case2 src/tools/example2.cpp
-    src/ds/occupancy_grid.cpp
-    src/mapping/mapping.cpp src/mapping/no_noise.cpp
-    src/abstract/scanner_metadata.cpp
-    src/math/grid.cpp src/math/linalg.cpp
-    )
-                
-add_executable(recorded src/tools/recorded_data.cpp
-    src/mapping/no_noise.cpp src/ds/occupancy_grid.cpp src/abstract/scanner_metadata.cpp src/mapping/mapping.cpp
-    src/math/linalg.cpp src/math/grid.cpp
-    ${HEADERS})
-                
-add_executable(line_GUI src/tools/grid_line_crossing.cpp 
-    src/math/linalg.cpp src/math/grid.cpp
-    src/graphics/glfw.cpp
-    ${HEADERS})
+# --- Library target ---
+add_library(mapping_methods STATIC ${LIB_SOURCES})
 
-add_executable(freiburg_eval src/tools/evaluate_freiburg.cpp 
-    src/math/linalg.cpp src/math/grid.cpp src/toolset/parser/freiburg.cpp
-    ${HEADERS})
-                
-set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "/home/pablo/Software/glfw")
+target_include_directories(mapping_methods
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
 
-target_include_directories(debug_case1 PRIVATE include)
+target_link_libraries(mapping_methods
+    PUBLIC
+        Eigen3::Eigen
+        spdlog::spdlog
+)
 
-target_link_libraries(debug_case1 Eigen3::Eigen)
-target_link_libraries(debug_case2 Eigen3::Eigen)
-target_link_libraries(recorded Eigen3::Eigen)
-target_link_libraries(line_GUI glfw OpenGL::GL argparse::argparse spdlog::spdlog)
-target_link_libraries(freiburg_eval spdlog::spdlog)
+if(glfw3_FOUND AND OpenGL_FOUND)
+    target_link_libraries(mapping_methods PUBLIC glfw OpenGL::GL)
+endif()
 
-message("${CMAKE_MODULE_PATH}")
+# --- Examples ---
+add_subdirectory(examples)

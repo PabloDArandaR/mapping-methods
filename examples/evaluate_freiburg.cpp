@@ -1,8 +1,8 @@
 #include "toolset/parser/freiburg.hpp"
-#include "spdlog/spdlog.h"
+#include "spdlo/spdlo.h"
 
 int main(){
-    spdlog::info("Evaluating Freiburg dataset");
+    spdlo::info("Evaluating Freiburg dataset");
     FreiburgParser parser;
     return 0;
 }

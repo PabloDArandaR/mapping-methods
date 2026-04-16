@@ -3,8 +3,11 @@
 
 #include "types.hpp"
 
+namespace mm {
 namespace grid {
-    std::tuple<float, float> line_parameters(Point, Point);
 
-    std::list<Cell> crossing_line_cells(Point, Point);
+std::tuple<double, double> line_parameters(Point, Point);
+std::list<Cell> crossing_line_cells(Point, Point);
+
 } // namespace grid
+} // namespace mm

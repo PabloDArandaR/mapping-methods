@@ -1,11 +1,14 @@
 #include "mapping/mapping.hpp"
 
+namespace mm {
+
 mapping::mapping(){};
 
-void mapping::update([[maybe_unused]] Eigen::Vector3d relative_position,
-                                  [[maybe_unused]] Eigen::Vector4d relative_rotation,
-                                  [[maybe_unused]] std::vector<float> laser_measurements){};
+void mapping::update([[maybe_unused]] const Eigen::Isometry3d& pose,
+                     [[maybe_unused]] const sensor::Measurement& measurement){};
 
 occupancyGrid* mapping::get_map() { return this->map; }
 
 void mapping::set_map(occupancyGrid* new_map) { this->map = new_map; };
+
+} // namespace mm

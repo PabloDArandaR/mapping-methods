@@ -1,8 +1,14 @@
+#pragma once
+
 #include "mapping/mapping.hpp"
 
-class bayesFilterMethod : mappingOccupancyGrid {
+namespace mm {
+
+class bayesFilterMethod : public mapping {
   public:
-    void update();
+    void update(const Eigen::Isometry3d& pose, const sensor::Measurement& measurement) override;
 
   private:
 };
+
+} // namespace mm

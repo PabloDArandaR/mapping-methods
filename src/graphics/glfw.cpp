@@ -1,39 +1,42 @@
 #include <iostream>
 #include <vector>
+
 #include "graphics/glfw.hpp"
 #include <GLFW/glfw3.h>
 
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+namespace mm {
+namespace viz {
 
-void drawRectangle(float x, float y, float width, float height, float red, float green, float blue){
+void drawRectangle(double x, double y, double width, double height, double red, double green, double blue) {
     glColor3f(red, green, blue);
 
     glBegin(GL_QUADS);
-    glVertex2f(x, y);           // Bottom-left vertex
-    glVertex2f(x + width, y);   // Bottom-right vertex
-    glVertex2f(x + width, y + height);  // Top-right vertex
-    glVertex2f(x, y + height);  // Top-left vertex
+    glVertex2f(x, y);
+    glVertex2f(x + width, y);
+    glVertex2f(x + width, y + height);
+    glVertex2f(x, y + height);
     glEnd();
-
 }
 
-void drawPoint(float x, float y, float radius, int segments, float red, float green, float blue){
+void drawPoint(double x, double y, double radius, int segments, double red, double green, double blue) {
     glColor3f(red, green, blue);
 
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(x, y);
-    for (int i{0}; i <= segments ; ++i){
-        float theta = 2.0f * M_PI * float(i) / float(segments);
-        float dx = radius * cosf(theta);
-        float dy = radius * sinf(theta);
+    for (int i{0}; i <= segments; ++i) {
+        double theta = 2.0f * M_PI * double(i) / double(segments);
+        double dx = radius * cosf(theta);
+        double dy = radius * sinf(theta);
         glVertex2f(x + dx, y + dy);
     }
     glEnd();
 }
 
-void drawLine(float x_initial, float y_initial, float x_final, float y_final, float red, float green, float blue){
+void drawLine(double x_initial, double y_initial, double x_final, double y_final, double red, double green,
+              double blue) {
     glColor3f(red, green, blue);
 
     glBegin(GL_LINES);
@@ -42,14 +45,11 @@ void drawLine(float x_initial, float y_initial, float x_final, float y_final, fl
     glEnd();
 }
 
-
 void drawGrid(int rows, int cols, int width, int height) {
-    // Set color to gray
     glColor3f(0.5f, 0.5f, 0.5f);
 
-    float horizontalSize {float(width)/cols}, verticalSize {float(height)/rows};
+    double horizontalSize{double(width) / cols}, verticalSize{double(height) / rows};
 
-    // Draw horizontal lines
     glLineWidth(2.0f);
     glBegin(GL_LINES);
     for (int i = 0; i <= rows; ++i) {
@@ -58,7 +58,6 @@ void drawGrid(int rows, int cols, int width, int height) {
     }
     glEnd();
 
-    // Draw vertical lines
     glBegin(GL_LINES);
     for (int i = 0; i <= cols; ++i) {
         glVertex2f(i * horizontalSize, 0.0f);
@@ -66,3 +65,6 @@ void drawGrid(int rows, int cols, int width, int height) {
     }
     glEnd();
 }
+
+} // namespace viz
+} // namespace mm
